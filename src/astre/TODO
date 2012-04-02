@@ -1,0 +1,17 @@
+TODO:
+ il semble toujours y avoir un bug lors de l'extraction des trajectoires :
+ l'algorithme n'arrive parfois pas à en extraire une seule (la première et seule
+ qui est extraite donne un "trajectory broken"). Ceci est certainement dû à un
+ problème de comparaison flottant. Pour l'instant on fait comme suit : à chaque
+ étape, on extrait la trajectoire la plus prometteuse, avec un petit EPSILON, qui
+ n'est en réalité pas nécessaire (on pourrait choisir EPSILON = 1), puisqu'à la
+ fin, on recalcule tout de même le NFA de la trajectoire obtenue et l'on vérifie
+ qu'il n'est pas trop loin de celui attendu en le comparant avec un autre EPSILON
+ (qui cette fois est nécessaire). Si les trajectoires sont rejetées à cause du
+ premier EPSILON, on peut essayer de le mettre à 1 (ce qui n'aura comme effet que
+ de rejeter un peu plus tard des trajectoires qui ne peuvent pas donner le NFA
+ voulu), si elles sont rejetées à cause du second EPSILON, il faut certainement
+ faire un schéma de type "précision adaptative" pour que le EPSILON puisse varier
+ (disons entre 10^-3 et 10^-1) si l'on est en train d'essayer d'extraire la première
+ trajectoire (une extraction qui ne devrait jamais échouer)
+
