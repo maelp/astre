@@ -1,0 +1,188 @@
+body {
+  background-color: #eeeeee;
+  font: 16px Droid Serif, serif ;
+  padding: 0 0 0 0 ;
+  margin: 0 0 0 0 ;
+  color: #242424;
+}
+
+.container {
+  background-color: #e4e5e7;
+  width: 700px ;
+  margin:  0 0 0px 200px ;
+  padding: 20px 30px 100px 30px ;
+}
+
+.content {
+  width: 600px ;
+  padding: 10px 0px 10px 0px ;
+}
+
+.margin_note {
+    position: relative;
+    z-index: 10;
+    padding: 4px 0;
+    float: left;
+    clear: left;
+    width: 200px;
+    margin: -1px 2px 0 -220px;
+    padding: 4px 4px 4px 4px;
+    background-color: #ff4466;
+    color: #eeeeee;
+}
+
+h1 {
+  font: 44px Qlassik, sans-serif ;
+}
+h1 .subtitle {
+  font: 32px Qlassik, sans-serif ;
+  color: #848587;
+}
+h2 {
+  font: 28px Qlassik, sans-serif ;
+  margin-left: 10px ;
+  color: #c46577;
+  padding-top: 40px ;
+}
+h2.part {
+  font: 26px Qlassik, sans-serif ;
+  margin-left: 10px ;
+  color: #0099ff;
+  padding-top: 20px ;
+}
+h3 {
+  font: 22px Qlassik, sans-serif ;
+  margin-left: 10px ;
+  color: #2faa2f;
+  padding-top: 10px ;
+}
+
+a img {
+  border: 0px;
+}
+
+#examples li {
+  list-style-type: none ; 
+  margin-bottom: 40px ;
+}
+
+ul.toc {
+  margin-left: 0px;
+  padding-left: 0px;
+}
+ul.toc li {
+  list-style-type: none ;
+}
+
+#examples .header {
+  font-size: 18px ;
+  color: #6577c4;
+}
+
+.fig {
+  display: block ;
+  margin: 0 auto ;
+  text-align: center ;
+  padding: 20px 0 20px 0 ;
+  width: 480px ;
+}
+.fig img {
+  padding: 2px ;
+  margin: 0px ;
+}
+.caption {
+  margin: 0 auto;
+  text-align: left ;
+  width: 400px;
+  font-size: 14px ;
+  color: #444444 ;
+}
+
+.separator { margin-top: 20px ; }
+
+.box {
+  margin: auto ;
+  padding-top: 20px ;
+  padding-bottom: 20px ;
+}
+.box_out {
+  background-color: #cadc85;
+  padding: 8px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  border-radius: 12px;
+}
+.box_in {
+  background-color: #f2ecac;
+  padding-left: 5px ;
+  padding-right: 5px ;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+}
+.box_title {
+  font: 32px Qlassik, sans-serif ;
+  color: #bacc75;
+}
+.box p {
+  margin: 20px 20px 20px 20px;
+}
+.small_box { width: 260px ; }
+.medium_box { width: 300px ; }
+.large_box { width: 460px ; }
+
+#downloads li {
+ list-style-type: none ; 
+ margin-bottom: 10px ;
+}
+
+#downloads .coming_soon {
+  display: none ;
+  width: 40% ;
+  color: #c46577 ;
+}
+
+.reference {
+  display: block ;
+}
+
+pre.code {
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  background-color: #f2ecac;
+}
+
+table.options {
+  width: 100%;
+}
+table.options td {
+  margin-left: 20px;
+}
+table.res td {
+  text-align: right;
+  padding-left: 20px;
+}
+table.res td.res_left {
+  text-align: left;
+}
+
+@font-face {
+	font-family: 'Qlassik';
+	src: url('../fonts/qlassik_tb-webfont.eot');
+	src: local('☺'), url('../fonts/qlassik_tb-webfont.ttf') format('truetype'), url('../fonts/qlassik_tb-webfont.woff') format('woff'), url('../fonts/qlassik_tb-webfont.svg#webfontFoY9JWP7') format('svg');
+	src: url('../fonts/qlassik_tb-webfont.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Qlassik';
+	src: url('../fonts/qlassikbold_tb-webfont.eot');
+	src: local('☺'), url('../fonts/qlassikbold_tb-webfont.woff') format('woff'), url('../fonts/qlassikbold_tb-webfont.ttf') format('truetype'), url('../fonts/qlassikbold_tb-webfont.svg#webfont2POzaTjH') format('svg');
+	font-weight: bold;
+	font-style: normal;
+}

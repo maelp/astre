@@ -1,0 +1,170 @@
+
+<!-- saved from url=(0050)http://www.math-info.univ-paris5.fr/~moisan/astre/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8" content="text/html" http-equiv="content-type">
+  <link href="./ASTRE_files/style.css" rel="stylesheet" type="text/css">
+  <title>ASTRE</title>
+<link type="text/css" rel="stylesheet" href="data:text/css,"></head>
+<body>
+  <div class="container">
+    <div class="content">
+      <h1>
+        ASTRE
+        <div class="subtitle">A-contrario Smooth TRajectory Extraction</div>
+      </h1>
+
+      <h3>Presentation</h3>
+      <h3><a href="http://www.math-info.univ-paris5.fr/~moisan/astre/manual.php">Download / Installation and usage manual</a></h3>
+      <h3><a href="http://www.math-info.univ-paris5.fr/~moisan/astre/snow.php">Snow data sequence</a></h3>
+      
+      <br><br>
+      <p>
+        Our work started with this simple observation: the human visual system
+        is able to perceive motion hidden in high amounts of noise. How far
+        could a computer go?
+        </p><div class="fig">
+          <img src="./ASTRE_files/noise_sequence_with_one_trajectory.gif">
+          <img src="./ASTRE_files/noise_sequence_with_one_trajectory-traj.gif">
+          <div class="caption">
+            This is a 200 frames sequence of 180 noise points and one real
+            trajectory. Can you spot it?
+          </div>
+        </div>
+      <p></p>
+      <p>
+        In the ASTRE framework, we derive from the 
+        <a href="http://www.math-info.univ-paris5.fr/~moisan/iam34.php">a-contrario</a>
+        methodology a probability-based ``perceptual metric'' on
+        the trajectories (combining their length, acceleration, number of 
+        holes, etc.). We also propose
+        an efficient algorithm to extract the trajectories
+        having the best appearance.
+      </p>
+      <p>
+        The principle of a-contrario algorithms is to control the number of
+        false detections in the noise, and our method is thus resilient to high
+        amounts of noise.
+        The perceptual metric can also be used to filter the result of any
+        other tracking algorithm, hence reducing the number of false
+        detections.
+      </p>
+      <h2 id="paper">
+        Paper
+      </h2>
+      M. Primet, L. Moisan, ``Point tracking: an a-contrario approach'', preprint MAP5, 2012. <font size="-1" color="#50b050"><b>download:</b></font>
+      <a href="http://www.math-info.univ-paris5.fr/~moisan/papers/download.php?file=2012-06.pdf"><img src="./ASTRE_files/pdfsmall.gif" height="16" width="16" alt="PDF" border="0"></a>
+
+      <p>
+        BibTeX Citation:
+      </p><pre class="code">@unpublished{ASTRE2012,
+  author = {M. Primet and L. Moisan},
+  title={Point tracking: an a-contrario approach},
+  note={Preprint MAP5},
+  year={2012}
+}
+</pre>
+
+      <h2 id="snow">
+        Snow sequence
+      </h2>
+      <p>
+        We filmed a sequence of falling snow flakes in front of a tainted background, and extracted the motion of the snow flakes and of the background to obtain an interesting point sequence to compare point tracking algorithms.
+      </p>
+      <p>
+        Go to the
+        <a href="http://www.math-info.univ-paris5.fr/~moisan/astre/snow.php">
+          snow data sequence</a>
+        page for a complete description and the sequence data files.
+      </p>
+      <div class="fig">
+        <img src="./ASTRE_files/real-notrajs.gif">
+        <div class="caption">
+          Snow sequence, original (subsampled) sequence.
+        </div>
+      </div>
+      <h2 id="examples">
+        Examples
+      </h2>
+      <ul id="examples">
+        <li>
+          <div class="header">Detections in high levels of noise</div>
+          <p>
+            Our algorithm is able to cope with a high density of noise points.
+            This example shows five trajectories hidden in 60 random noise
+            points, that our algorithm is able to detect and extract.
+          </p>
+          <div class="fig">
+            <img src="./ASTRE_files/ex1-notrajs.gif">
+            <img src="./ASTRE_files/ex1-trajs.gif">
+            <img src="./ASTRE_files/ex1-sol.gif">
+            <div class="caption">
+              We generated 5 trajectories and added 60 noise points. We show
+              the original sequence (left), our detections (center) and the
+              ground truth (right). We see that the trajectories have been
+              correctly detected, and no false detection has been made.
+            </div>
+          </div>
+          <p>
+            Our algorithm makes very few false detections.
+          </p>
+          <div class="fig">
+            <img src="./ASTRE_files/noise_trajectory_breakdown.png">
+            <div class="caption">
+              A sequence containing 20 trajectories and 120 noise points, we
+              show in blue the correctly detected trajectory links, in red the
+              wrongly detected links, and in green the existing links that were
+              not detected.
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="header">Robustness to model variations</div>
+          <p>
+            Our algorithm is able to detect trajectories with high accelerations, and does not require a global parameter for all trajectories, but is able to adapt its detection thresholds to each trajectory in the data.
+          </p>
+          <div class="fig">
+            <img src="./ASTRE_files/ex2-notrajs.gif">
+            <img src="./ASTRE_files/ex2-trajs.gif">
+            <img src="./ASTRE_files/ex2-sol.gif">
+            <div class="caption">
+              We generated a sequence containing 5 trajectories and 40 noise
+              points (left). We show the detections made by our algorithm
+              (center) and the ground truth (right).
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="header">Robustness to parameter tuning</div>
+          <p>
+            Only one parameter, easy to set (all detections shown on this page are
+            obtained with the canonical maximal log(NFA) = 0 parameter).
+            Changing the parameter has the effect of adding or removing
+            trajectories, rather than changing completely their appearances.
+          </p>
+          <div class="fig">
+            <img src="./ASTRE_files/NFA-rec_prec.png">
+            <div class="caption">
+              Recall and precision of ASTRE on the snow sequence, we see that the most interesting detections happen for a maximal log<sub>10</sub>(NFA) parameter between 0 (red disc) and 5 (red circle)
+            </div>
+          </div>
+          <div class="fig">
+            <img src="./ASTRE_files/snow.lNFA_0.png" width="240px">
+            <img src="./ASTRE_files/snow.lNFA_1.png" width="240px">
+            <img src="./ASTRE_files/snow.lNFA_2.png" width="240px">
+            <img src="./ASTRE_files/snow.lNFA_3.png" width="240px">
+            <img src="./ASTRE_files/snow.lNFA_4.png" width="240px">
+            <img src="./ASTRE_files/snow.lNFA_5.png" width="240px">
+            <div class="caption">
+              Detections on the snow sequence when the maximal log<sub>10</sub>(NFA) parameter takes the values 0, 1, 2, 3, 4, 5
+            </div>
+          </div>
+        </li>
+            
+      </ul>
+    </div>
+  </div>
+
+
+
+
+</body></html>

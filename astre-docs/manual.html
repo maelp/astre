@@ -1,0 +1,852 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+  <meta charset='utf-8' content='text/html' http-equiv='content-type' />
+  <link href='stylesheets/style.css' rel='stylesheet' type='text/css' />
+  <script src='javascripts/.js' type='text/javascript'></script>
+  <title>ASTRE - A-contrario smooth trajectory extraction</title>
+</head>
+<body>
+  <div class='container'>
+    <div class='content'>
+      <h1>
+        ASTRE
+        <div class='subtitle'>Installation and usage manual</div>
+      </h1>
+      <h2>Table of contents</h2>
+      <ol>
+        <li>
+          <a href='#installation'>Installation</a>
+        </li>
+        <li>
+          <a href='#tutorial'>Tutorial</a>
+          <ul class='toc'>
+            <li>
+              &ndash;
+              <a href='#tutorial-usage'>Usage of ASTRE and visualization of the results</a>
+            </li>
+            <li>
+              &ndash;
+              <a href='#tutorial-evaluation'>Evaluation of ASTRE results</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href='#format'>ASTRE data file format</a>
+        </li>
+        <li>
+          <a href='#reference'>User reference</a>
+          <ul class='toc'>
+            <li>
+              &ndash;
+              <a href='#astre-reference'>ASTRE (<tt>astre-noholes</tt> and <tt>astre-holes</tt>)</a>
+            </li>
+            <li>
+              &ndash;
+              <a href='#tstats-reference'>
+                Recall and precision computation (<tt>tstats</tt>)
+              </a>
+            </li>
+            <li>
+              &ndash;
+              <a href='#psmg-reference'>
+                PSMG Point Set Motion Generator (<tt>tpsmg</tt>)
+              </a>
+            </li>
+            <li>
+              &ndash;
+              <a href='#cripple-reference'>
+                Point set crippling (<tt>tcripple</tt>)
+              </a>
+            </li>
+            <li>
+              &ndash;
+              <a href='#tview-reference'>
+                Viewer (<tt>tview.py</tt>)
+              </a>
+            </li>
+            <li>
+              &ndash;
+              <a href='#naive_astre-reference'>
+                Naive ASTRE implementation in Python (<tt>naive_astre.py</tt>)
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ol>
+      <h2 id='installation'>
+        Installation
+      </h2>
+      <h3>Requirements</h3>
+      <p>
+        You need an environment providing a C compiler (tested with gcc 4.3),
+        as well as Python and PyQt4 for the visualization tools (optional, see below for the installation)
+      </p>
+      <h3>Install the dependencies</h3>
+      <p>
+        Download and install cbase (version 1.3.5 or greater)
+        from our
+        <a href='public/data/cbase-1.3.5.tar.gz'>
+          local copy
+        </a>
+        or from
+        <a href='http://www.hyperrealm.com/cbase/cbase-1.3.5.tar.gz'>
+          the project website
+        </a>
+        :
+      </p><pre class='code'>$ tar -xzf cbase-1.3.5.tar.gz&#x000A;$ cd cbase-1.3.5&#x000A;$ ./configure&#x000A;$ make&#x000A;$ sudo make install&#x000A;$ cd ..</pre><p>
+        Download and install argtable2 (version 1.3 or greater)
+        from our
+        <a href='public/data/argtable2-13.tar.gz'>
+          local copy
+        </a>
+        or from
+        <a href='http://prdownloads.sourceforge.net/argtable/argtable2-13.tar.gz'>
+          the project site
+        </a>
+        :
+      </p><pre class='code'>$ tar -xzf argtable2-13.tar.gz&#x000A;$ cd argtable2-13&#x000A;$ ./configure&#x000A;$ make&#x000A;$ sudo make install&#x000A;$ cd ..&#x000A;</pre><p>
+        Add the library installation path to the <tt>LD_LIBRARY_PATH</tt> environment variable in your <tt>.bash_profile</tt>
+        or <tt>.profile</tt> file:
+      </p><pre class='code'>export LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}&#x000A;</pre><p>
+        You can then remove the source directories <tt>cbase-1.3.5</tt>
+        and <tt>argtable2-13</tt> that are no longer needed.
+      </p>
+      <h3>Install ASTRE</h3>
+      <p>
+        Download
+        <a href='public/data/astre-1.0.tar.gz'>
+          ASTRE
+        </a>
+        and compile the binaries:
+      </p><pre class='code'>$ tar -xzf astre-1.0.tar.gz&#x000A;$ cd astre-1.0&#x000A;$ make</pre><p>
+        Add the Python library path to your <tt>PATH</tt>
+        environment variable in your <tt>.bash_profile</tt>
+        or <tt>.profile</tt> file:
+      </p><pre class='code'>export PATH=/path/to/astre-1.0/bin:${PATH}&#x000A;</pre><h3>Install the visualization tools [optional]</h3>
+      <p>
+        Install Python and PyQt4:
+      </p><pre class='code'>$ sudo apt-get install python python-qt4-dev</pre><p>
+        Add the Python library path to your <tt>PYTHONPATH</tt>
+        environment variable in your <tt>.bash_profile</tt>
+        or <tt>.profile</tt> file:
+      </p><pre class='code'>export PYTHONPATH=/path/to/astre-1.0/lib/python/:${PYTHONPATH}&#x000A;</pre><center>
+        <p style='font-size: 22px'>
+          &#10086;
+        </p>
+      </center>
+      <h2 id='tutorial'>
+        Tutorial
+      </h2>
+      <h2 class='part' id='tutorial-usage'>
+        Usage of ASTRE and visualization of the results
+      </h2>
+      <h3>Visualize points description files</h3>
+      <p>
+        If you have installed the Python libraries, you can use the
+        <tt>tview.py</tt> points description files viewer.
+      </p>
+      <div>
+        <div class='margin_note'>
+          Trajectories visualization
+        </div>
+        <p>
+          ASTRE comes bundled with sample data in the <tt>data</tt> directory. To
+          visualize the snow sequence, type
+        </p>
+      </div><pre class='code'>$ tview.py data/snow.30Hz.desc&#x000A;</pre>and press <tt>f</tt>(orward) and <tt>b</tt>(ackward) to move through the
+      sequence.
+      <div class='fig'>
+        <img src='public/images/tutorial-viz.png' />
+        <div class='caption'>
+          Visualization of the snow sequence
+        </div>
+      </div>
+      <h3>Run ASTRE on the snow sequence</h3>
+      <div class='margin_note'>
+        <tt>astre-noholes</tt>
+      </div>
+      <p>
+        We run ASTRE (without holes) on the trajectory set and visualize the
+        found trajectories using the <tt>-t</tt> option of <tt>tview.py</tt>
+        with parameter &epsilon; = 0 (maximal value of log<sub>10</sub>(NFA))
+      </p><pre class='code'>$ astre-noholes -e 0.0 data/snow.30Hz.desc tjs&#x000A;$ tview.py -t tjs&#x000A;</pre><div class='fig'>
+        <img src='public/images/det_noholes_0.png' width='250px' />
+        <div class='caption'>
+          Detections found using the ASTRE algorithm without holes for the
+          parameter &epsilon; = 0. Only a few trajectories have been detected.
+        </div>
+      </div>
+      <p>
+        We can run ASTRE (without holes) with a larger parameter to
+        discover more trajectories:
+      </p><pre class='code'>$ astre-noholes -e 5.0 data/snow.30Hz.desc tjs&#x000A;$ tview.py -t tjs&#x000A;</pre><div class='fig'>
+        <img src='public/images/det_noholes_5.png' width='250px' />
+        <div class='caption'>
+          Detections found using the ASTRE algorithm without holes for the
+          parameter &epsilon; = 5. This time, the number of detected
+          trajectories is much larger.
+        </div>
+      </div>
+      <div>
+        <div class='margin_note'>
+          <tt>astre-holes</tt>, and
+          constraint on hole size
+        </div>
+        <p>
+          You could do the same with <tt>astre-holes</tt> to obtain the results
+          shown in our paper, but this takes much more time and memory on such
+          a large sequence. You can however use the <tt>-h</tt> parameter of
+          <tt>astre-holes</tt> to limit the size of the holes in a trajectory,
+          and speed up the computation at the expense of finding suboptimal
+          solutions (the computation took about 2 minutes on a standard
+          laptop):
+        </p>
+      </div><pre class='code'>$ astre-holes -e 5.0 -h 1 data/snow.30Hz.desc tjs&#x000A;$ tview.py -t tjs&#x000A;</pre><div class='fig'><img src='public/images/det_holes_5_h1.png' width='220px' /><img src='public/images/det_holes_5.png' width='220px' />
+        <div class='caption'>
+          Detections found using the ASTRE algorithm with holes for the
+          parameter &epsilon; = 5 when the sizes of the holes (<b>left</b>) are
+          limited to one frame to speed-up computations, or (<b>right</b>) are
+          unbounded. You can see that almost all the trajectories have been
+          already correctly captured when considering only trajectories with
+          holes of length at most one frame.
+        </div>
+      </div>
+      <p>
+        As a reference, this is the computation times on a standard laptop for <tt>astre-holes</tt> with parameter &epsilon; = 0 and various values of the <tt>h</tt> parameter on the snow sequence (which has 40 frames):
+      </p>
+      <table class='res'>
+        <tr>
+          <td class='res_left'><tt>h</tt></td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>10</td>
+          <td>20</td>
+          <td>30</td>
+          <td>40</td>
+        </tr>
+        <tr>
+          <td class='res_left'>time</td>
+          <td>1m 51s</td>
+          <td>6m 8s</td>
+          <td>9m 28s</td>
+          <td>14m 25s</td>
+          <td>17m 55s</td>
+          <td>31m 28s</td>
+          <td>43m 25s</td>
+          <td>46m 21s</td>
+          <td>44m 47s</td>
+        </tr>
+      </table>
+      <div>
+        <div class='margin_note'>
+          trajectory identifiers
+        </div>
+        <p>
+          <tt>astre-noholes</tt> and <tt>astre-holes</tt> copy the input points description file to the output and add a column containing the trajectory identifier (or <tt>-1</tt> if the point does not belong to a trajectory).
+        </p>
+      </div>
+      <div>
+        <div class='margin_note'>
+          log<sub>10</sub>(NFA) headers
+        </div>
+        <p>
+          Note also that <tt>astre-noholes</tt> and <tt>astre-holes</tt> add a header for each detected trajectory of the form <tt>traj:&lt;id&gt;:lNFA = &lt;lNFA&gt;</tt> showing the log<sub>10</sub> NFA of the corresponding trajectory <tt>id</tt>.
+        </p>
+      </div>
+      <h2 class='part' id='tutorial-evaluation'>
+        Evaluation of ASTRE results
+      </h2>
+      <h3>Algorithm evaluation on real data</h3>
+      <div class='fig'><img src='public/images/det_groundtruth.png' width='220px' /><img src='public/images/det_noholes_0.png' width='220px' /><img src='public/images/det_noholes_5.png' width='220px' /><img src='public/images/det_holes_5.png' width='220px' />
+        <div class='caption'>
+          (<b>Top left</b>) Ground-truth trajectories, (<b>top right</b>) trajectories found with <tt>astre-noholes</tt> and &epsilon; = 0, (<b>bottom left</b>) <tt>astre-noholes</tt> and &epsilon; = 5, and (<b>bottom right</b>) <tt>astre-holes</tt> and &epsilon; = 5.
+        </div>
+      </div>
+      <p>
+        A qualitative visual inspection of the found trajectories already gives
+        a rough idea of the algorithms performances. Yet one would sometimes
+        rather have a way to quantify those performances.
+      </p>
+      <div class='margin_note'>
+        Recall and precision
+      </div>
+      <p>
+        The recall and the precision of the detections can be computed using
+        the <tt>tstats</tt> program. Rather than taking into account only whole
+        trajectories (without any missing or spurious point), we chose to
+        compute the recall and precision in terms of the number of correct
+        links found, that is, two consecutive points on a trajectory, possibly
+        separated by a hole. The recall and precision are then:
+      </p>
+      <center>
+        <tt>recall = # of correct links / # of real links</tt>
+        <br />
+        <tt>precision = # of correct links / # of found links</tt>
+      </center>
+      <p>
+        where a link is real if it belongs to the ground-truth, is found if it
+        belongs to the detected trajectories and is correct if it belongs to
+        both.
+      </p>
+      <p>
+        The sample snow sequence has been originally acquired at 210Hz to make
+        it possible to reconstruct the ground-truth by hand on this simple to
+        track version, and has then been subsampled to 30Hz to obtain a more
+        challenging to track sequence. The snow sequence thus also contains the
+        ground-truth, making it possible to compute the recall and precision of
+        our results:
+      </p><pre class='code'>$ astre-noholes -e 0.0 data/snow.30Hz.desc tjs&#x000A;$ tstats tjs&#x000A;[MD] {'recall': 0.497377, 'precision': 0.993711,&#x000A;      'num_detected_trajs': 39, }&#x000A;</pre><p>
+        The <tt>tstats</tt> program expects to be given a points description file with the ground truth as the fourth column and the found trajectories as the last column, but you can also specify the index of the column if needed, and even specify two different input files, one containing the ground truth, the other containing the detected trajectories.
+      </p>
+      <p>
+        The output array of <tt>tstats</tt> is in Python format, and the
+        results of the experiments can be quickly processed by filtering the
+        lines starting with <tt>[MD]</tt> (stands for metadata) and evaluating
+        the following data structure in Python.
+      </p><pre class='code'>>>> statistics = eval("{'recall': 0.497377,&#x000A;   'precision': 0.993711, 'num_detected_trajs': 39, }")&#x000A;</pre><p>
+        We compare the performances of <tt>astre-noholes</tt> when we increase the maximal value of the log<sub>10</sub> NFA:
+      </p><pre class='code'>$ astre-noholes -e 5.0 data/snow.30Hz.desc tjs&#x000A;$ tstats tjs&#x000A;[MD] {'recall': 0.709339, 'precision': 0.948107,&#x000A;      'num_detected_trajs': 124, }&#x000A;</pre><p>
+        Obviously, the number of detected trajectories (and thus the recall) has increased, while the precision has slightly decreased (we made some false detections).
+      </p>
+      <p>
+        We can now compare this last result with those of <tt>astre-holes</tt> with parameter &epsilon; = 5, both when we constrain the maximal size of a hole to 1 and when it is unbounded:
+      </p><pre class='code'>$ astre-holes -e 5.0 -h 1 data/snow.30Hz.desc tjs&#x000A;$ tstats tjs&#x000A;[MD] {'recall': 0.751312, 'precision': 0.939633,&#x000A;      'num_detected_trajs': 99, }&#x000A;</pre><p>
+        Since you might not want to run the computation in the unbounded case
+        on your computer, you might want to
+        <a href='public/data/snow.tar.gz'>download</a>
+        the results of ASTRE on the snow sequence and compute its performances.
+        In this case, since <tt>lNFA_5.tjs</tt> does not contain both the
+        ground truth and the detected trajectories, but only the latter, we
+        specify both the ground truth file and the detected trajectories file:
+      </p><pre class='code'>$ tstats snow.30Hz.desc lNFA_5.tjs&#x000A;[MD] {'recall': 0.764953, 'precision': 0.895577,&#x000A;      'num_detected_trajs': 111, }&#x000A;</pre><p>
+        Clearly, we have gained almost nothing in recall, but slightly lost in
+        precision by allowing unbounded hole lengths. However, this might be
+        due to properties of this particular data and might not be the case in
+        a more general setting.
+      </p>
+      <p>
+        As a reference, here is a table with the recall, precision and number
+        of detected trajectories for <tt>astre-holes</tt> on the snow sequence
+        with parameter &epsilon; = 0 and various values for the maximal hole
+        length parameter <tt>h</tt> (the sequence spans 40 frames):
+      </p>
+      <table class='res'>
+        <tr>
+          <td class='res_left'><tt>h</tt></td>
+          <td>1</td>
+          <td>2</td>
+          <td>3-6</td>
+          <td>7-40</td>
+        </tr>
+        <tr>
+          <td class='res_left'>recall</td>
+          <td>0.56</td>
+          <td>0.56</td>
+          <td>0.57</td>
+          <td>0.58</td>
+        </tr>
+        <tr>
+          <td class='res_left'>prec.</td>
+          <td>0.94</td>
+          <td>0.93</td>
+          <td>0.92</td>
+          <td>0.91</td>
+        </tr>
+        <tr>
+          <td class='res_left'>#trajs</td>
+          <td>39</td>
+          <td>38</td>
+          <td>37</td>
+          <td>39</td>
+        </tr>
+      </table>
+      <p>
+        and when &epsilon; = 5
+      </p>
+      <table class='res'>
+        <tr>
+          <td class='res_left'><tt>h</tt></td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4-6</td>
+          <td>7-40</td>
+        </tr>
+        <tr>
+          <td class='res_left'>recall</td>
+          <td>0.76</td>
+          <td>0.77</td>
+          <td>0.76</td>
+          <td>0.77</td>
+          <td>0.76</td>
+        </tr>
+        <tr>
+          <td class='res_left'>prec.</td>
+          <td>0.92</td>
+          <td>0.91</td>
+          <td>0.90</td>
+          <td>0.90</td>
+          <td>0.90</td>
+        </tr>
+        <tr>
+          <td class='res_left'>#trajs</td>
+          <td>119</td>
+          <td>112</td>
+          <td>110</td>
+          <td>111</td>
+          <td>108</td>
+        </tr>
+      </table>
+      <h3>Systematic algorithm evaluation using synthetic trajectories</h3>
+      <div>
+        <div class='margin_note'>
+          synthetic trajectories generation
+        </div>
+        <p>
+          We generate 5 trajectories spanning 20 frames, add 10 random noise
+          points in each frame and then remove 20% of the trajectory points, and
+          run ASTRE (with holes) with the default parameter &epsilon; = 0:
+        </p>
+      </div><pre class='code'>$ tpsmg -N 10 20 5 pts&#x000A;$ tcripple -r 20 pts pts&#x000A;$ astre-holes pts tjs&#x000A;</pre><p>
+        Note that when generating (integer-valued) point description files with <tt>tpsmg</tt>, we forbid two trajectories from sharing a point (otherwise the overlapping trajectory is regenerated), and we do not add noise points at the same location as one trajectory point. By default, all trajectories are constrained to stay in the frame (otherwise they are regenerated), but this behavior can be changed with the <tt>-F</tt> option (see
+        <a href='#astre-reference'>
+          below
+        </a>
+        for a description of the astre options).
+      </p>
+      <p>
+        Also note that when crippling points description files with <tt>tcripple</tt>, only points belonging to a trajectory are removed (the noise points are kept).
+      </p>
+      <center>
+        <p style='font-size: 22px'>
+          &#10086;
+        </p>
+      </center>
+      <h2 id='format'>
+        ASTRE points and trajectories data file format
+      </h2>
+      <p>The format of the files is the following</p><pre class='code'>type = PointsFile v.1.0&#x000A;uid = 1&#x000A;width = 480&#x000A;height = 360&#x000A;DATA&#x000A;0 292 204 4 &#x000A;0 247 304 51 &#x000A;...&#x000A;</pre><p>
+        All the lines before <tt>DATA</tt> are headers of the form <tt>key =
+        value</tt>, and all the lines after <tt>DATA</tt> are array of floats
+        representing one point, the minimum data for a point is 3 column:
+      </p><pre class='code'>&lt;frame&gt; &lt;x&gt; &lt;y&gt;</pre><div>
+        <div class='margin_note'>
+          trajectory identifier
+        </div>
+        <p>
+          but often they have a trajectory identifier
+        </p>
+      </div><pre class='code'>&lt;frame&gt; &lt;x&gt; &lt;y&gt; &lt;t&gt;</pre>where <tt>t</tt> is the id of the trajectory to which the point belong, or <tt>-1</tt> if the point does not belong to a trajectory.
+      <p>
+        The data entries can be preceded by an optional column name:
+      </p><pre class='code'>f:0 x:292 y:204 t:4&#x000A;...</pre>in which case, all the tags of one column must be the same.
+      <p>
+        If you need it, you can add other data columns to represent the
+        intensity of the points, etc. It is also possible to add length-varying
+        descriptors (for instance, a polygonal shape descriptor) by using
+        special headers: describe each shape with a unique identifier as header
+        entries, and reference the corresponding identifier in your data
+        column:
+      </p><pre class='code'>type = PointsFile v.1.0&#x000A;...&#x000A;shape:0 = (4.0, 18.0) (17.0, 10.0) ... (14.0, 18.0)&#x000A;shape:1 = (2.0, 5.0) (14.0, 11.0) ... (5.0, 15.0)&#x000A;...&#x000A;DATA&#x000A;&lt;frame&gt; &lt;x&gt; &lt;y&gt; &lt;shape_id&gt; &lt;trajectory_id&gt;&#x000A;...&#x000A;</pre><div>
+        <div class='margin_note'>
+          points description file headers
+        </div>
+        <p>
+          The required headers are
+        </p>
+      </div>
+      <ul>
+        <li><tt>type</tt> to identify the file format version (its value should be <tt>PointsFile v.1.0</tt>),</li>
+        <li><tt>width</tt> and <tt>height</tt> representing the frame size,</li>
+        <li><tt>uid</tt> with an integer identifier representing the data. This can be an arbitrary integer, and from our personal experience, it sometimes proves useful to avoid accidentally mixing data and this is why it is mandatory, although you can safely set it to <tt>0</tt> if you do not plan to use it.</li>
+      </ul>
+      <center>
+        <p style='font-size: 22px'>
+          &#10086;
+        </p>
+      </center>
+      <h2 id='reference'>
+        User reference
+      </h2>
+      <div>
+        <div class='margin_note'>
+          <tt>astre-noholes</tt>
+          <br />
+          <tt>astre-holes</tt>
+        </div>
+        <h3 id='astre-reference'>
+          ASTRE (<tt>astre-noholes</tt> and <tt>astre-holes</tt>)
+        </h3>
+      </div>
+      <p>
+        The <tt>astre-noholes</tt> and <tt>astre-holes</tt> programs greedily detect trajectories in a points description file using the a-contrario framework. The <tt>astre-noholes</tt> can be used when the trajectories do not contain holes, and its detection criterion is optimized for this case. In general, <tt>astre-noholes</tt> is faster and more memory-efficient than <tt>astre-holes</tt>.
+      </p>
+      <p>
+        The basic usage to detect trajectories of log<sub>10</sub> NFA less than 0 is:
+      </p><pre class='code'>$ astre-noholes &lt;in&gt; &lt;out&gt;&#x000A;$ astre-holes &lt;in&gt; &lt;out&gt;&#x000A;</pre><p>
+        The options are:
+      </p>
+      <table class='options'>
+        <tr>
+          <td style='width: 200px;'>
+            <tt>--epsilon &lt;e&gt;</tt><br/>(or <tt>-e &lt;e&gt;</tt>)
+          </td>
+          <td>
+            set the maximal log<sub>10</sub> NFA for the trajectories detection (default: 0.0)
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>--max-hole-length &lt;h&gt;</tt> (or <tt>-h &lt;h&gt;</tt>)
+          </td>
+          <td>
+            set the maximal size of a hole when using <tt>astre-noholes</tt> (default: any length). This can be used to lower the computational and memory costs, at the expense of not considering all the possible trajectories.
+          </td>
+        </tr>
+      </table>
+      <p>
+        ASTRE adds a column containing trajectory identifiers, or <tt>-1</tt> if a point does not belong to a detected trajectory. It also adds headers of the form <tt>traj:&lt;id&gt;:lNFA = &lt;lNFA&gt;</tt> that describe the log<sub>10</sub> NFA of each trajectory.
+      </p>
+      <p>
+        Using the programs with the option <tt>--tag-NFA</tt> only tags each trajectory with its NFA and exits. This can be useful if you have detected trajectories using another program, and want to filter out trajectories above a certain NFA.
+      </p>
+      <p>
+        For long computations, you might want ASTRE to periodically save the partial detections, to make detection backups or to monitor detected trajectories. This is possible using the <tt>--save-partial &lt;filename&gt;</tt> option. Restarting a computation is done using the <tt>--restart</tt> option and using the partial detections file as input:
+      </p><pre class='code'>$ astre-holes --save-partial partial_tjs pts tjs&#x000A;...[interrupt computations]&#x000A;$ astre-holes --save-partial partial_tjs --restart partial_tjs tjs&#x000A;</pre><p>
+        Finally, the <tt>auto-crop</tt> option is not thoroughly tested but might help detecting trajectories when image sequences have some points in the center of the images and a lot of empty space around, by automatically cropping the empty space, which changes the implicit scale of the images, and hence the NFA.
+      </p>
+      <div>
+        <div class='margin_note'>
+          <tt>tstats</tt>
+        </div>
+        <h3 id='tstats-reference'>
+          Recall and precision computation (<tt>tstats</tt>)
+        </h3>
+      </div>
+      <p>
+        The <tt>tstats</tt> program outputs the recall and precision defined in terms of real, correct and found links, as well as the number of detected trajectories.
+      </p>
+      <p>
+        The basic usage is:
+      </p><pre class='code'>$ tstats [&lt;ground truth file&gt;] &lt;detected trajectories file&gt;&#x000A;</pre><p>
+        If the ground truth file is not specified, this assumes that the detected trajectories file contains both the ground truth and the trajectories detected by the algorithm. The ground truth and the detected trajectories file must have the same <tt>uid</tt> header. By default, the ground truth file should have the trajectories identifiers in the fourth column and the detected trajectories file should have them in the last column.
+      </p>
+      <p>
+        A link is two successive (possibly separated by a hole) detected points in a trajectory. A link is real if it belongs to the ground truth, it is found if it belongs to the detected trajectories, and it is correct if it belongs to both.
+      </p>
+      <p>
+        The recall is <tt># correct links / # real links</tt> and the precision
+        is <tt># correct links / # found links</tt>. The recall corresponds to
+        the proportion of real points that have been detected, while the
+        precision corresponds to the proportion of detected points that are
+        correct, that is, it inversely relates to the number of false detections.
+      </p>
+      <p>
+        The options are:
+      </p>
+      <table class='options'>
+        <tr>
+          <td style='width: 200px;'>
+            <tt>--real-traj &lt;r&gt;</tt><br/>(or <tt>-r &lt;r&gt;</tt>)
+          </td>
+          <td>
+            the 0-based index of the column containing the real trajectories in the ground truth points description file (default: 3)
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>--found-traj &lt;f&gt;</tt><br/>(or <tt>-f &lt;f&gt;</tt>)
+          </td>
+          <td>
+            the 0-based index of the column containing the real trajectories in the detected trajectories points description file (default: -1, the last column)
+          </td>
+        </tr>
+      </table>
+      <div>
+        <div class='margin_note'>
+          <tt>tpsmg</tt>
+        </div>
+        <h3 id='psmg-reference'>
+          PSMG Point Set Motion Generator (<tt>tpsmg</tt>)
+        </h3>
+      </div>
+      <p>
+        The <tt>tpsmg</tt> program emulates the Point Set Motion Generator, that randomly draws some points in the image frame and displace them by updating their acceleration from frame to frame with a gaussian variable.
+      </p>
+      <p>
+        The basic usage to generate <tt>n</tt> trajectories spanning <tt>K</tt> frames in the file <tt>out</tt> is:
+      </p><pre class='code'>$ tpsmg &lt;K&gt; &lt;n&gt; &lt;out&gt;&#x000A;</pre><p>
+        The options are:
+      </p>
+      <table class='options'>
+        <tr>
+          <td>
+            <tt>-N &lt;N&gt;</tt>
+          </td>
+          <td>
+            add <tt>N</tt> noise points to each image (the noise points cannot share the location of a trajectory point)
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>-r</tt>
+          </td>
+          <td>
+            the number of noise points added to each image is not constant, but rather a number drawn uniformly between <tt>0</tt> and <tt>N</tt>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>-F</tt>
+          </td>
+          <td>
+            do not force trajectories to stay inside the frames
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>-w &lt;w&gt; -h &lt;h&gt;</tt>
+          </td>
+          <td>
+            set the image width and height
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>-a &lt;a&gt;</tt>
+          </td>
+          <td>
+            set the variance of the speed amplitude update (default: <tt>0.2</tt>)
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>-o &lt;o&gt;</tt>
+          </td>
+          <td>
+            set the variance of the speed orientation update (default: <tt>0.2</tt>)
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>-v &lt;v&gt;</tt>
+          </td>
+          <td>
+            set the mean initial speed of the trajectories (default: <tt>5.0</tt>)
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>-V &lt;V&gt;</tt>
+          </td>
+          <td>
+            set the variance of the initial speed of the trajectories (default: <tt>0.5</tt>)
+          </td>
+        </tr>
+      </table>
+      <div>
+        <div class='margin_note'>
+          Trajectory generation
+        </div>
+        <p>
+          The trajectories are generated in the following way:
+        </p>
+      </div>
+      <ol>
+        <li>the first point of each of the <tt>n</tt> trajectories is drawn uniformly in the first frame of the sequence,</li>
+        <li>
+          each trajectory is generated in turn:
+          <ol>
+            <li>we draw a normal variable of mean <tt>v</tt> and variance <tt>V</tt> that defines the initial speed amplitude, and a variable drawn in <tt>[0, 2π]</tt> that defines the initial speed orientation,</li>
+            <li>we update the trajectory position according to the speed,</li>
+            <li>we add the point to the trajectory, unless it leaves the frame or it is on the location of a previously generated trajectory, in which case we regenerate the whole trajectory,</li>
+            <li>we draw a normal variable of mean <tt>0</tt> and variance <tt>a</tt> representing the speed amplitude update, and a normal variable of mean <tt>0</tt> and variance <tt>o</tt> representing the speed orientation update,</li>
+            <li>we update the speed amplitude and orientation</li>
+          </ol>
+        </li>
+        <li>we add <tt>N</tt> random points in each frame such that they do not share position with a trajectory point (if the <tt>-r</tt> option is set, we add a number of noise points drawn uniformly between <tt>0</tt> and <tt>N</tt>,</li>
+        <li>we shuffle the position of all the points in each frame in the points description file.</li>
+      </ol>
+      <p>
+        If the <tt>-F</tt> option has been set, the trajectories are not forced to stay inside the frame, and as they leave the image they are ended and a new trajectory is started in the next frame by choosing a random point uniformly on the border of the image frame and iterating the trajectory generation process. Note in this case that if a trajectory has less than <tt>3</tt> points in the image frame, we regenerate it, and if a trajectory leaves the image frame less than <tt>3</tt> frames before the end of the sequence, no new trajectory is generated, since it could not comply with the above <tt>3</tt>-frames constraint.
+      </p>
+      <p>
+        Note that for some parameters, it is possible that the <tt>tpsmg</tt> does not terminate, in particular if the amplitude of the trajectory acceleration is too high, it is possible that no trajectory fits in the frame, and the program keeps trying to regenerate them.
+      </p>
+      <p>
+        The <tt>tpsmg</tt> program also outputs metadata indicating the global maximal speed and acceleration of the generated trajectories:
+      </p><pre class='code'>$ tpsmg 20 5 pts&#x000A;[MD] { 'max_speed': 5.83095, 'max_accel': 2.82843 }&#x000A;</pre><div>
+        <div class='margin_note'>
+          <tt>tcripple</tt>
+        </div>
+        <h3 id='cripple-reference'>
+          Point set crippling (<tt>tcripple</tt>)
+        </h3>
+      </div>
+      <p>
+        The <tt>tcripple</tt> program remove a certain amount of points from the trajectories contained in a points description file to simulate missing detections.
+      </p>
+      <p>
+        Note that the number of points removed is generally not a fixed proportion of the input points, but rather, each point from a trajectory is removed with a certain probability <tt>r</tt>.
+      </p>
+      <p>
+        Note also that <tt>tcripple</tt> only affects point on a trajectory, that is, points having a trajectory tag different from <tt>-1</tt> (and thus, points description files need to have a trajectory identifier column when using <tt>tcripple</tt>).
+      </p>
+      <p>
+        The basic usage to remove points in trajectories with probability <tt>r</tt> is:
+      </p><pre class='code'>$ tcripple -r &lt;r&gt; &lt;in&gt; &lt;out&gt;&#x000A;</pre><p>
+        The options are:
+      </p>
+      <table class='options'>
+        <tr>
+          <td>
+            <tt>-r &lt;r&gt;</tt>
+          </td>
+          <td>
+            the probability that a point in a trajectory is removed
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>--traj-col &lt;t&gt;</tt> (or <tt>-t &lt;t&gt;)
+          </td>
+          <td>
+            the 0-based index of the column containing the trajectories (default: -1, the last column)
+          </td>
+        </tr>
+      </table>
+      <div>
+        <div class='margin_note'>
+          <tt>tview.py</tt>
+        </div>
+        <h3 id='tview-reference'>
+          Viewer (<tt>tview.py</tt>)
+        </h3>
+      </div>
+      <p>
+        If you have installed the Python libraries, you can use the <tt>tview.py</tt> program to view points description files and the point trajectories.
+      </p>
+      <p>
+        The basic usage is
+      </p><pre class='code'>$ tview.py [-t] &lt;points description file&gt;&#x000A;</pre>The option <tt>-t</tt> indicates that we want to load the trajectories contained in the points description file, where the trajectories are defined by the last column of the points description file. Points having the same identifier as the last column are in the same trajectory, and points having the special identifier <tt>-1</tt> do not belong to any trajectory.
+      <p>
+        The options are:
+      </p>
+      <table class='options'>
+        <tr>
+          <td>
+            <tt>--trajectory-column &lt;n&gt;</tt>
+          </td>
+          <td>
+            the column (index is 0-based) describing the trajectories (default is -1, the last column)
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>--show-trajectories</tt> (or <tt>-t</tt>)
+          </td>
+          <td>
+            load and show trajectories using the trajectory identifiers in the column <tt>trajectory-column</tt>
+          </td>
+        </tr>
+      </table>
+      and the commands are:
+      <table class='options'>
+        <tr>
+          <td>
+            <tt>f</tt>/<tt>b</tt>
+          </td>
+          <td>
+            go forward or backward in the sequence
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>q</tt>
+          </td>
+          <td>
+            quit the program
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>+</tt>/<tt>-</tt>/<tt>=</tt>
+          </td>
+          <td>
+            zoom in/out/default
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>t</tt>
+          </td>
+          <td>
+            toggle trajectory drawing (when trajectories have been loaded)
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>m</tt>
+          </td>
+          <td>
+            set the current frame as the first frame from which to draw trajectories
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>h</tt>
+          </td>
+          <td>
+            highlight the points that belong to a trajectory in red
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>x</tt>
+          </td>
+          <td>
+            randomize the trajectory colors
+          </td>
+        </tr>
+      </table>
+      <div>
+        <div class='margin_note'>
+          <tt>naive_astre.py</tt>
+        </div>
+        <h3 id='naive_astre-reference'>
+          Naive ASTRE implementation in Python (<tt>naive_astre.py</tt>)
+        </h3>
+      </div>
+      <p>
+        ASTRE comes with a naive implementation in the Python language for
+        clarity, that should however not be used with large datasets, as it is
+        slow and requires a lot of memory.
+      </p>
+      <p>
+        The basic usage is
+      </p><pre class='code'>$ naive_astre.py &lt;in&gt; &lt;out&gt;&#x000A;</pre>and the options are
+      <table class='options'>
+        <tr>
+          <td>
+            <tt>--solver [noholes|holes]</tt>
+          </td>
+          <td>
+            the solver (without holes or with holes)
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <tt>--eps &lt;e&gt;</tt> (or <tt>-e &lt;e&gt;</tt>)
+          </td>
+          <td>
+            the maximal value of log<sub>10</sub>(NFA)
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</body>

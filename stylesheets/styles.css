@@ -177,6 +177,22 @@ header ul a strong {
   -webkit-font-smoothing: antialiased;
 }
 
+nav {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+nav ul {
+    list-style: none;
+    padding-left: 10px;
+    margin-bottom: 4px;
+}
+nav ul li {
+    padding-right: 20px;
+}
+nav ul li.nav-current {
+    color: #f4b;
+}
+
 section {
   padding: 15px 20px;
   font-size: 15px;
